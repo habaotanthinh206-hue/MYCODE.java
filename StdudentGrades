@@ -1,0 +1,68 @@
+// File: StudentGrades.java
+// Compile: javac StudentGrades.java
+// Run:     java StudentGrades
+
+import java.util.*;
+
+public class StudentGrades {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Nhập số lượng học sinh: ");
+        int n;
+        try {
+            n = Integer.parseInt(sc.nextLine().trim());
+        } catch (Exception e) {
+            System.out.println("Số không hợp lệ. Thoát.");
+            sc.close();
+            return;
+        }
+        if (n <= 0) {
+            System.out.println("Phải nhập số > 0. Thoát.");
+            sc.close();
+            return;
+        }
+
+        String[] names = new String[n];
+        double[] grades = new double[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Tên học sinh " + (i + 1) + ": ");
+            names[i] = sc.nextLine().trim();
+            System.out.print("Điểm (0 - 100) của " + names[i] + ": ");
+            try {
+                grades[i] = Double.parseDouble(sc.nextLine().trim());
+            } catch (Exception e) {
+                System.out.println("Điểm không hợp lệ, sẽ đặt 0.");
+                grades[i] = 0.0;
+            }
+            if (grades[i] < 0) grades[i] = 0;
+            if (grades[i] > 100) grades[i] = 100;
+        }
+
+        double sum = 0;
+        int maxIdx = 0, minIdx = 0;
+        for (int i = 0; i < n; i++) {
+            sum += grades[i];
+            if (grades[i] > grades[maxIdx]) maxIdx = i;
+            if (grades[i] < grades[minIdx]) minIdx = i;
+        }
+        double avg = sum / n;
+
+        System.out.println("\n--- KẾT QUẢ ---");
+        System.out.printf("Trung bình lớp: %.2f%n", avg);
+        System.out.printf("Cao nhất: %s (%.2f)%n", names[maxIdx], grades[maxIdx]);
+        System.out.printf("Thấp nhất: %s (%.2f)%n", names[minIdx], grades[minIdx]);
+
+        // Xếp hạng giảm dần
+        Integer[] idx = new Integer[n];
+        for (int i = 0; i < n; i++) idx[i] = i;
+        Arrays.sort(idx, (a, b) -> Double.compare(grades[b], grades[a]));
+
+        System.out.println("\nXếp hạng (từ cao xuống thấp):");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("%d. %s - %.2f%n", i + 1, names[idx[i]], grades[idx[i]]);
+        }
+
+        sc.close();
+    }
+}
